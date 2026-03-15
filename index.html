@@ -62,7 +62,7 @@ const PARTIES=[
    bio:"Udenrigsminister. Skeptisk over for formueskat - vil hellere beskatte realiserede boliggevinster og udstede frivaerdigaranti. Seks principper for ny boligskat, men forst efter naeste valgperiode. Foreslar deltidspension til alle tre ar for pensionsalderen. Stoetter NATO og EUs forsvarsdimension. Mener svinebestanden kan reduceres med 8 mio. dyr. Midterposition pa atomkraft. 5 nye sundhedsinitiativer."},
   {id:"F",name:"SF",leader:"Pia Olsen Dyhr",color:"#E04040",short:"POD",
    bio:"SF-formand. Stoetter formueskat og vil fjerne kontanthjaelpsloftet. Vil afsaette 2 mia. kr. til aeldrecheck og hojere pensioner sammen med S. Onsker differentieret pensionsalder for nedslidte. Vil lofte folkeskolen med flere laerere og minimumsnormeringer. Kraever bindende klimalov og sproejteforbud. Imod atomkraft. Stoetter NATO men vil sikre forsvar ikke udhuler velfaerd. Vil genindfoere Store Bededag."},
-  {id:"O2",name:"Enhedslisten",leader:"Pelle Dragsted",color:"#8B1A1A",short:"PD",
+  {id:"OE",name:"Enhedslisten",leader:"Pelle Dragsted",color:"#8B1A1A",short:"PD",
    bio:"Politisk leder. Vil indfoere omfatende formueskat og haeve personfradraget med 12.000 kr. for lave indkomster. Onsker progressiv boligbeskatning mod spekulation. Vil styrke folkepensionen markant. Bakker 100% op om vaben til Ukraine - historisk aendring for partiet. Ser atomkraft som en blindgyde. Stoetter territorialforsvar og NATO, men imod oprustning pa 5% af BNP. Vil have gratis tandpleje."},
   {id:"C",name:"Konservative",leader:"Mona Juul",color:"#007A3D",short:"MJ",
    bio:"Konservatives formand. Imod formueskat. Gar til valg pa boligskattestop: vil holde ejendomsvaerdiskatten i ro. Accepterer pensionsalder pa 70 ar fra 2040. Medunderskriver pa bla bloks lofte om at ophaeve atomkraftforbuddet. Staerkt forsvar er kernemarkesag. Bakker entydigt op om Troels Lund Poulsen som statsministerkandidat. Foreslaar 50 mio. kr. til fysioterapi for gigtpatienter. Kraever nationalt sproejteforbud."},
@@ -70,9 +70,9 @@ const PARTIES=[
    bio:"Radikales leder. Imod Socialdemokratiets formueskat, men ser det ikke som hindring for samarbejde. Vil lofte daginstitutioner og folkeskoler med 15 mia. kr. Afviser udvidelse af Arne-pensionen. Vil have nyt klimamal for 2035 og binding til 110% reduktion inden 2045. Imod atomkraft. Stoetter NATO men ville have bremset F-35-ordren. Aber for europaeisk atomparaply uden atomvaben pa dansk jord."},
   {id:"I",name:"Liberal Alliance",leader:"Alex Vanopslagh",color:"#C49000",short:"AV",
    bio:"LA-formand. Valgkampens staerkeste modstander af formueskat - en dealbreaker. Vil saenke skatter med 47,7 mia. kr.: forste 5.000 kr./md. skattefri, afskaffe topskat, aktieskat ned til 34%, selskabsskat ned til 18%. Vil bygge 6-8 atomreaktorer for ca. 120 mia. kr. Vil tillade atomvaben pa dansk jord. Skattelettelser frem for offentlige investeringer i skole og sundhed."},
-  {id:"AA",name:"Alternativet",leader:"Franciska Rosenkilde",color:"#1E7B4B",short:"FR",
+  {id:"ALT",name:"Alternativet",leader:"Franciska Rosenkilde",color:"#1E7B4B",short:"FR",
    bio:"Alternativets leder. Stoetter principielt formueskat og progressiv beskatning. Klima er den vigtigste markesag: vil begraense gylleudledning, indfoere reelt sproejteforbud og gennemfoere groen omstilling. Imod atomkraft. Vil gore nationale tests frivillige og fokusere pa trivsel i skolen. Mere fredsaktivistisk tilgang til Ukraine og NATO end de ovrige partier. Prioriterer mental sundhed og forebyggelse."},
-  {id:"AE",name:"Danmarksdemokraterne",leader:"Inger Støjberg",color:"#1A3D6E",short:"IS",
+  {id:"DD",name:"Danmarksdemokraterne",leader:"Inger Støjberg",color:"#1A3D6E",short:"IS",
    bio:"Danmarksdemokraternes grundlaegger. Imod formueskat. Vil bevare Arne-pensionen og beskytte pensionister. Vil have folkeskole med faglighed, disciplin og kernefaglighed. Stoetter bla bloks lofte om at ophaeve atomkraftforbuddet. Stoetter staerkt forsvar og NATO-oprustning. Stoetter vaben til Ukraine. Vil lukke sundhedsskellet mellem land og by. Stram udlaendingepolitik og dansk kultur som kerne."},
   {id:"O",name:"Dansk Folkeparti",leader:"Morten Messerschmidt",color:"#C07010",short:"MM",
    bio:"DF-formand. Imod formueskat - vil i stedet halvere momsen pa fodevarer og saenke diesel- og benzinafgifter. Pensionister er topprioritet: over 30 mia. kr. afsat, 6,5 mia. kr. ekstra til aeldrepleje, staerk fortaler for Arne-pensionen. Folkeskole med dansk kultur og faglighed. Medunderskriver pa bla bloks atomkraftlofte. Stoetter minimum 2% af BNP til forsvar og fuld stoette til Ukraine. 10 mia. kr. ekstra til sundhed."},
@@ -187,9 +187,9 @@ async function send(){
   const sel=PARTIES.filter(p=>S.picked.includes(p.id));
   const system=`Du er vaert for en dansk valgdebat om "${S.theme}" ved Folketingsvalget 2026.
 Svar KUN i karakteren som disse partiledere baseret pa deres FAKTISKE holdninger fra valgkampen 2026:
-${sel.map(p=>`- ${p.leader} (${p.name}): ${p.bio}`).join('\n')}
+${sel.map(p=>`- ${p.leader} (${p.name}, ID: ${p.id}): ${p.bio}`).join('\n')}
 
-VIGTIGT: Svar udelukkende ud fra de holdninger der er beskrevet ovenfor. Opfind ikke holdninger der ikke er naevnt.
+VIGTIGT: Svar udelukkende ud fra de holdninger der er beskrevet ovenfor. Brug PRAECIST det ID der er angivet i parentes ovenfor - ikke partibogstavet.
 
 Svar KUN med dette JSON uden markdown:
 {"responses":[{"id":"PARTI_ID","response":"svar her"}]}
