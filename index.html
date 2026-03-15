@@ -7,19 +7,19 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,sans-serif;background:#f9f9f7;color:#111;min-height:100vh}
-#app{max-width:680px;margin:0 auto;padding:1.5rem 1rem 3rem}
+#app{max-width:700px;margin:0 auto;padding:1.5rem 1rem 3rem}
 h1{font-size:24px;font-weight:600}
 .sub{font-size:15px;color:#888;margin-top:4px}
-.sec{font-size:11px;font-weight:600;color:#888;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
-.themes{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.75rem}
+.sec{font-size:11px;font-weight:600;color:#888;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;margin-top:1.5rem}
+.themes{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:.5rem}
 .tpill{padding:8px 18px;border-radius:20px;border:1.5px solid #ddd;background:#fff;font-size:14px;cursor:pointer;color:#888;transition:all .12s}
 .tpill.on{background:#111;color:#fff;border-color:#111;font-weight:500}
-.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:1.75rem}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px;margin-bottom:.5rem}
 .pcard{border:1.5px solid #e0e0e0;border-radius:10px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .12s;background:#fff}
 .pcard.on{border-width:2.5px;background:#fafafa}
 .pcard.dis{opacity:.4;cursor:not-allowed}
 .av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;color:#fff;flex-shrink:0}
-.startbtn{width:100%;padding:14px;border-radius:10px;background:#111;color:#fff;border:none;font-size:16px;font-weight:500;cursor:pointer}
+.startbtn{width:100%;padding:14px;border-radius:10px;background:#111;color:#fff;border:none;font-size:16px;font-weight:500;cursor:pointer;margin-top:1.25rem}
 .startbtn:disabled{opacity:.35;cursor:not-allowed}
 .hint{font-size:12px;color:#bbb;text-align:center;margin-top:8px}
 .valg{margin-top:1.25rem;padding:14px 16px;border-radius:10px;border:1px solid #e8e8e8;background:#fff}
@@ -48,102 +48,108 @@ textarea{flex:1;padding:11px 14px;border-radius:10px;border:1px solid #ddd;font-
 textarea:focus{outline:none;border-color:#999}
 .sbtn{padding:11px 20px;border-radius:10px;border:none;background:#111;color:#fff;font-size:15px;cursor:pointer;font-weight:500}
 .sbtn:disabled{opacity:.35;cursor:not-allowed}
+.divider{border:none;border-top:1px solid #e8e8e8;margin:1rem 0}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <script>
 const PARTIES=[
-  {id:"A",name:"Socialdemokratiet",leader:"Mette Frederiksen",color:"#C8001A",short:"MF",
-   bio:"Statsminister. Vil genindføre formueskat: 0,5% arligt af formuer over 25 mio. kr. for enlige (50 mio. kr. for par). Frivaerdi op til 10 mio. kr. undtaget. Provenu pa 6,5 mia. kr. bruges til Lilleskolen med maks. 14 elever i yngste klasser og 4.000 nye laerere. Fjerner ejendomsvaerdiskat for boliger under 1 mio. kr. Halverer stigning i pensionsalderen fra 2045. Forsvarsbudget 3,5% af BNP, stoetter NATO og vaben til Ukraine. Fastholder vedvarende energi, ikke atomkraft."},
-  {id:"V",name:"Venstre",leader:"Troels Lund Poulsen",color:"#003F8A",short:"TLP",
-   bio:"Forsvarsminister og statsministerkandidat. Kalder formueskat en misundelsesskat der vil braemse vaeksten og koste arbejdspladser. Tillidsskolen: 4 mia. kr. til flere voksne i skolen, lokal beslutning om klassestorrelse. Forbedrer seniorpension til 9 ar for pensionsalder. Stoetter oprustning til 3,5% af BNP og er aben for atomvaben pa dansk jord. Medunderskriver pa bla bloks atomkraftlofte. Fuld stoette til Ukraine."},
-  {id:"M",name:"Moderaterne",leader:"Lars Løkke Rasmussen",color:"#7B2D8B",short:"LLR",
-   bio:"Udenrigsminister. Skeptisk over for formueskat - vil hellere beskatte realiserede boliggevinster og udstede frivaerdigaranti. Seks principper for ny boligskat, men forst efter naeste valgperiode. Foreslar deltidspension til alle tre ar for pensionsalderen. Stoetter NATO og EUs forsvarsdimension. Mener svinebestanden kan reduceres med 8 mio. dyr. Midterposition pa atomkraft. 5 nye sundhedsinitiativer."},
-  {id:"F",name:"SF",leader:"Pia Olsen Dyhr",color:"#E04040",short:"POD",
-   bio:"SF-formand. Stoetter formueskat og vil fjerne kontanthjaelpsloftet. Vil afsaette 2 mia. kr. til aeldrecheck og hojere pensioner sammen med S. Onsker differentieret pensionsalder for nedslidte. Vil lofte folkeskolen med flere laerere og minimumsnormeringer. Kraever bindende klimalov og sproejteforbud. Imod atomkraft. Stoetter NATO men vil sikre forsvar ikke udhuler velfaerd. Vil genindfoere Store Bededag."},
-  {id:"OE",name:"Enhedslisten",leader:"Pelle Dragsted",color:"#8B1A1A",short:"PD",
-   bio:"Politisk leder. Vil indfoere omfatende formueskat og haeve personfradraget med 12.000 kr. for lave indkomster. Onsker progressiv boligbeskatning mod spekulation. Vil styrke folkepensionen markant. Bakker 100% op om vaben til Ukraine - historisk aendring for partiet. Ser atomkraft som en blindgyde. Stoetter territorialforsvar og NATO, men imod oprustning pa 5% af BNP. Vil have gratis tandpleje."},
-  {id:"C",name:"Konservative",leader:"Mona Juul",color:"#007A3D",short:"MJ",
-   bio:"Konservatives formand. Imod formueskat. Gar til valg pa boligskattestop: vil holde ejendomsvaerdiskatten i ro. Accepterer pensionsalder pa 70 ar fra 2040. Medunderskriver pa bla bloks lofte om at ophaeve atomkraftforbuddet. Staerkt forsvar er kernemarkesag. Bakker entydigt op om Troels Lund Poulsen som statsministerkandidat. Foreslaar 50 mio. kr. til fysioterapi for gigtpatienter. Kraever nationalt sproejteforbud."},
-  {id:"B",name:"Radikale Venstre",leader:"Martin Lidegaard",color:"#9B1D82",short:"ML",
-   bio:"Radikales leder. Imod Socialdemokratiets formueskat, men ser det ikke som hindring for samarbejde. Vil lofte daginstitutioner og folkeskoler med 15 mia. kr. Afviser udvidelse af Arne-pensionen. Vil have nyt klimamal for 2035 og binding til 110% reduktion inden 2045. Imod atomkraft. Stoetter NATO men ville have bremset F-35-ordren. Aber for europaeisk atomparaply uden atomvaben pa dansk jord."},
-  {id:"I",name:"Liberal Alliance",leader:"Alex Vanopslagh",color:"#C49000",short:"AV",
-   bio:"LA-formand. Valgkampens staerkeste modstander af formueskat - en dealbreaker. Vil saenke skatter med 47,7 mia. kr.: forste 5.000 kr./md. skattefri, afskaffe topskat, aktieskat ned til 34%, selskabsskat ned til 18%. Vil bygge 6-8 atomreaktorer for ca. 120 mia. kr. Vil tillade atomvaben pa dansk jord. Skattelettelser frem for offentlige investeringer i skole og sundhed."},
-  {id:"ALT",name:"Alternativet",leader:"Franciska Rosenkilde",color:"#1E7B4B",short:"FR",
-   bio:"Alternativets leder. Stoetter principielt formueskat og progressiv beskatning. Klima er den vigtigste markesag: vil begraense gylleudledning, indfoere reelt sproejteforbud og gennemfoere groen omstilling. Imod atomkraft. Vil gore nationale tests frivillige og fokusere pa trivsel i skolen. Mere fredsaktivistisk tilgang til Ukraine og NATO end de ovrige partier. Prioriterer mental sundhed og forebyggelse."},
-  {id:"DD",name:"Danmarksdemokraterne",leader:"Inger Støjberg",color:"#1A3D6E",short:"IS",
-   bio:"Danmarksdemokraternes grundlaegger. Imod formueskat. Vil bevare Arne-pensionen og beskytte pensionister. Vil have folkeskole med faglighed, disciplin og kernefaglighed. Stoetter bla bloks lofte om at ophaeve atomkraftforbuddet. Stoetter staerkt forsvar og NATO-oprustning. Stoetter vaben til Ukraine. Vil lukke sundhedsskellet mellem land og by. Stram udlaendingepolitik og dansk kultur som kerne."},
-  {id:"O",name:"Dansk Folkeparti",leader:"Morten Messerschmidt",color:"#C07010",short:"MM",
-   bio:"DF-formand. Imod formueskat - vil i stedet halvere momsen pa fodevarer og saenke diesel- og benzinafgifter. Pensionister er topprioritet: over 30 mia. kr. afsat, 6,5 mia. kr. ekstra til aeldrepleje, staerk fortaler for Arne-pensionen. Folkeskole med dansk kultur og faglighed. Medunderskriver pa bla bloks atomkraftlofte. Stoetter minimum 2% af BNP til forsvar og fuld stoette til Ukraine. 10 mia. kr. ekstra til sundhed."},
-  {id:"H",name:"Ny Højre",leader:"Lars Boje Mathiesen",color:"#2D2D6E",short:"LBM",
-   bio:"Borgernes Parti-leder. Staerk modstander af formueskat. Vil have billig og stabil energi, positiv over for atomkraft. Stoetter NATO og vil leve op til styrkemalet. EU-kritisk - vil have beslutninger tilbage fra Bruxelles til nationalstaterne. Imod masseindvandring og hoje skatter. Vil have mere effektivt sundhedsvaesen med mindre bureaukrati. Stoetter Ukraines forsvarskamp."},
+  {id:"A",name:"Socialdemokratiet",leader:"Mette Frederiksen",color:"#C8001A",short:"MF",bio:"Vil genindfoere formueskat: 0,5% aarligt af formuer over 25 mio. kr. for enlige (50 mio. kr. for par), frivaerdi op til 10 mio. kr. undtaget, provenu 6,5 mia. kr. til Lilleskolen med maks. 14 elever i yngste klasser og 4.000 nye laerere. Fjerner ejendomsvaerdiskat for boliger under 1 mio. kr. Halverer stigning i pensionsalderen fra 2045. Forsvarsbudget 3,5% af BNP, stoetter NATO og vaaben til Ukraine. Fastholder vedvarende energi, ikke atomkraft."},
+  {id:"V",name:"Venstre",leader:"Troels Lund Poulsen",color:"#003F8A",short:"TLP",bio:"Kalder formueskat en misundelsesskat der vil braemse vaeksten og koste arbejdspladser. Tillidsskolen: 4 mia. kr. til flere voksne i skolen, lokal beslutning om klassestorrelse. Forbedrer seniorpension til 9 aar foer pensionsalder. Stoetter oprustning til 3,5% af BNP og er aaben for atomvaaben paa dansk jord. Medunderskriver paa blaa bloks atomkraftlofte. Fuld stoette til Ukraine."},
+  {id:"M",name:"Moderaterne",leader:"Lars Løkke Rasmussen",color:"#7B2D8B",short:"LLR",bio:"Skeptisk over for formueskat - vil hellere beskatte realiserede boliggevinster og udstede frivaerdigaranti. Seks principper for ny boligskat, men foerst efter naeste valgperiode. Foreslar deltidspension til alle tre aar foer pensionsalderen. Stoetter NATO og EUs forsvarsdimension. Midterposition paa atomkraft. 5 nye sundhedsinitiativer."},
+  {id:"F",name:"SF",leader:"Pia Olsen Dyhr",color:"#E04040",short:"POD",bio:"Stoetter formueskat og vil fjerne kontanthjaelpsloftet. Vil afsaette 2 mia. kr. til aeldrecheck og hoejere pensioner. Onsker differentieret pensionsalder for nedslidte. Vil lofte folkeskolen med flere laerere og minimumsnormeringer. Kraever bindende klimalov og sproejteforbud. Imod atomkraft. Vil genindfoere Store Bededag."},
+  {id:"OE",name:"Enhedslisten",leader:"Pelle Dragsted",color:"#8B1A1A",short:"PD",bio:"Vil indfoere omfatende formueskat og haeve personfradraget med 12.000 kr. for lave indkomster. Onsker progressiv boligbeskatning mod spekulation. Vil styrke folkepensionen markant. Bakker 100% op om vaaben til Ukraine. Ser atomkraft som en blindgyde. Stoetter territorialforsvar og NATO, men imod oprustning paa 5% af BNP. Vil have gratis tandpleje."},
+  {id:"C",name:"Konservative",leader:"Mona Juul",color:"#007A3D",short:"MJ",bio:"Imod formueskat. Gaar til valg paa boligskattestop: vil holde ejendomsvaerdiskatten i ro. Accepterer pensionsalder paa 70 aar fra 2040. Medunderskriver paa blaa bloks lofte om at ophaeve atomkraftforbuddet. Staerkt forsvar er kernemarkesag. Bakker entydigt op om Troels Lund Poulsen som statsministerkandidat. Kraever nationalt sproejteforbud."},
+  {id:"B",name:"Radikale Venstre",leader:"Martin Lidegaard",color:"#9B1D82",short:"ML",bio:"Imod Socialdemokratiets formueskat, men ser det ikke som hindring for samarbejde. Vil lofte daginstitutioner og folkeskoler med 15 mia. kr. Afviser udvidelse af Arne-pensionen. Vil have nyt klimamaal for 2035 og binding til 110% reduktion inden 2045. Imod atomkraft. Stoetter NATO men ville have bremset F-35-ordren."},
+  {id:"I",name:"Liberal Alliance",leader:"Alex Vanopslagh",color:"#C49000",short:"AV",bio:"Valgkampens staerkeste modstander af formueskat - en dealbreaker. Vil saenke skatter med 47,7 mia. kr.: foerste 5.000 kr./md. skattefri, afskaffe topskat, aktieskat ned til 34%, selskabsskat ned til 18%. Vil bygge 6-8 atomreaktorer for ca. 120 mia. kr. Vil tillade atomvaaben paa dansk jord."},
+  {id:"ALT",name:"Alternativet",leader:"Franciska Rosenkilde",color:"#1E7B4B",short:"FR",bio:"Stoetter principielt formueskat og progressiv beskatning. Klima er den vigtigste markesag: vil begraense gylleudledning, indfoere reelt sproejteforbud og gennemfoere groen omstilling. Imod atomkraft. Vil goere nationale tests frivillige og fokusere paa trivsel i skolen. Mere fredsaktivistisk tilgang til Ukraine og NATO."},
+  {id:"DD",name:"Danmarksdemokraterne",leader:"Inger Støjberg",color:"#1A3D6E",short:"IS",bio:"Imod formueskat. Vil bevare Arne-pensionen og beskytte pensionister. Vil have folkeskole med faglighed, disciplin og kernefaglighed. Stoetter blaa bloks lofte om at ophaeve atomkraftforbuddet. Stoetter staerkt forsvar og NATO-oprustning. Stoetter vaaben til Ukraine. Stram udlaendingepolitik og dansk kultur som kerne."},
+  {id:"O",name:"Dansk Folkeparti",leader:"Morten Messerschmidt",color:"#C07010",short:"MM",bio:"Imod formueskat - vil i stedet halvere momsen paa fodevarer og saenke diesel- og benzinafgifter. Pensionister er topprioritet: over 30 mia. kr. afsat, 6,5 mia. kr. ekstra til aeldrepleje, staerk fortaler for Arne-pensionen. Medunderskriver paa blaa bloks atomkraftlofte. Stoetter minimum 2% af BNP til forsvar og fuld stoette til Ukraine. 10 mia. kr. ekstra til sundhed."},
+  {id:"H",name:"Ny Højre",leader:"Lars Boje Mathiesen",color:"#2D2D6E",short:"LBM",bio:"Staerk modstander af formueskat. Vil have billig og stabil energi, positiv over for atomkraft. Stoetter NATO og vil leve op til styrkemalet. EU-kritisk - vil have beslutninger tilbage fra Bruxelles til nationalstaterne. Imod masseindvandring og hoje skatter. Stoetter Ukraines forsvarskamp."},
 ];
 
 const DEBATERS=[
-  {id:"AT",name:"Allan Thorvaldsen",color:"#2563EB",short:"AT",
-   bio:"Centrum-venstre. Graen valgtest: mest enig med SF og Radikale. Skeptisk over for Alternativets chancer - advarer om stemmespild. Bekymret for NATO-eskalering og langstrakt krig - kalder lederne 'hovedloese hons'. Tilhanger af klimaagendaen. Imod formueskat som symbolpolitik der skader investeringer. Pragmatisk og humoristisk ordstyrer."},
-  {id:"CM",name:"Claus Møller",color:"#DC2626",short:"CM",
-   bio:"Klart liberal/borgerlig. Stemte LA pa valgtest - naesten fuld plade. Groen valgtest: DD og DF. Klimaskeptisk - mener oekonomi og reformer skal prioriteres over klimapolitik. Kalder nationalt sproejteforbud for populisme. Imod formueskat. Stoetter Mileis markedsliberale reformer i Argentina. Mener dansk model med let hyre/fyre er en styrke."},
-  {id:"MH",name:"Michael Hermansen",color:"#059669",short:"MH",
-   bio:"Centrum-venstre. Overvejer Alternativet. Klart klimaengageret - kobler klima og oekonomi uloeselige. Argumenterer for at klimaforandringer har direkte oekonomisk betydning. Kritisk over for Mileis reformer - ser dem som udsalg af landets fremtid. Positiv over for Loekkes tale. Interesseret i groen omstilling. Nuanceret og velinformeret."},
-  {id:"AA",name:"Alexander Aghassipour",color:"#7C3AED",short:"AA",
-   bio:"Liberal/libertaer tendens. Groen valgtest: 70% Radikale. Imod formueskat - kalder det kortsigtet billig made at hoste stemmer. Skeptisk over for det danske ivaerksaettermiljo. AI-pessimist: frygter at 99,9% af wealth koncentreres i 5-10 globale virksomheder. Bekymret for tech-oligarkers magt. Mener AI pa sigt kan loese baeredygtighedsproblemer."},
-  {id:"JB",name:"Jan Borgstrøm",color:"#0891B2",short:"JB",
-   bio:"Klart centrum-venstre til venstre. Groen valgtest: 83% Radikale, 82% Socialdemokratiet, 82% SF. Kritisk over for Trump og USA's engagement i Israel-konflikten. Mener Trump forsoeger at bruge NATO til Israels krig. Geopolitisk bekymret og deler research-links aktivt. Brevstemmer da han er pa lederkursus valgdag."},
-  {id:"AS",name:"Arne Schultz",color:"#D97706",short:"AS",
-   bio:"Centrum-venstre. Groen valgtest: 68% Socialdemokratiet, 66% SF, 63% Alternativet. Kritisk over for USA/Israel. Nervoees for NATO-inddragelse og Mellemoesteneskalering - sidder stille i bussen. Humoristisk tone og foretraekker face-to-face debat med et glas vin. Investerer i forsvarsindustri (SAAB, Africa Oil). Har bestilt belgisk oel til valgaften."},
-  {id:"OS",name:"Ole Schultz",color:"#0D9488",short:"OS",
-   bio:"Centrum-venstre. Groen valgtest: 68% Socialdemokratiet, 66% SF, 63% Alternativet. Velinformeret om geopolitik og logistik - bekaemret for lukning af flykorridorer og oekonomiske konsekvenser. Foelger noeje med i Iran-konflikten og NATO-situationen. Forholdsvis rolig tone."},
-  {id:"JM",name:"Jacob Manz",color:"#BE185D",short:"JM",
-   bio:"Klart venstre. Groen valgtest: 75% SF, 74% Alternativet, 74% Radikale. Klimapositive holdninger baseret pa valgtestresultater. Brevstemmer da han er pa lederkursus valgdag. Lille aktiv bidrag i politisk debat men valgtesten placerer ham klart pa den groenne venstrefloej."},
+  {id:"AT",name:"Allan Thorvaldsen",color:"#2563EB",short:"AT",bio:"Centrum-venstre. Groen valgtest: mest enig med SF og Radikale. Skeptisk over for Alternativets chancer - advarer om stemmespild. Bekymret for NATO-eskalering og langstrakt krig - kalder lederne 'hoved-loese hons'. Tilhanger af klimaagendaen. Pragmatisk og humoristisk ordstyrer i debatten. Folger aktivt investeringer og geopolitik."},
+  {id:"CM",name:"Claus Møller",color:"#DC2626",short:"CM",bio:"Klart liberal/borgerlig. Stemte LA paa valgtest - naesten fuld plade. Groen valgtest: DD og DF. Klimaskeptisk - mener oekonomi og reformer skal prioriteres over klimapolitik. Kalder nationalt sproejteforbud for populisme. Imod formueskat. Stoetter Mileis markedsliberale reformer. Mener dansk model med let hyre/fyre er en styrke."},
+  {id:"MH",name:"Michael Hermansen",color:"#059669",short:"MH",bio:"Centrum-venstre. Overvejer Alternativet. Klart klimaengageret - kobler klima og oekonomi uloeselige. Argumenterer for at klimaforandringer har direkte oekonomisk betydning. Kritisk over for Mileis reformer. Positiv over for Loekkes tale. Interesseret i groen omstilling. Nuanceret og velinformeret."},
+  {id:"AA",name:"Alexander Aghassipour",color:"#7C3AED",short:"AA",bio:"Liberal/libertaer tendens. Groen valgtest: 70% Radikale. Imod formueskat - kalder det kortsigtet billig made at hoste stemmer. Skeptisk over for det danske ivaerksaettermiljo. AI-pessimist: frygter at 99,9% af wealth koncentreres i 5-10 globale virksomheder. Bekymret for tech-oligarkers magt."},
+  {id:"JB",name:"Jan Borgstrøm",color:"#0891B2",short:"JB",bio:"Klart centrum-venstre til venstre. Groen valgtest: 83% Radikale, 82% Socialdemokratiet, 82% SF. Kritisk over for Trump og USA's engagement i Israel-konflikten. Mener Trump forsoeger at bruge NATO til Israels krig. Geopolitisk bekymret og deler research-links aktivt."},
+  {id:"AS",name:"Arne Schultz",color:"#D97706",short:"AS",bio:"Centrum-venstre. Groen valgtest: 68% Socialdemokratiet, 66% SF, 63% Alternativet. Kritisk over for USA/Israel. Nervoees for NATO-inddragelse og Mellemoesteneskalering - sidder stille i bussen. Humoristisk tone og foretraekker face-to-face debat med et glas vin. Investerer i forsvarsindustri (SAAB, Africa Oil)."},
+  {id:"OS",name:"Ole Schultz",color:"#0D9488",short:"OS",bio:"Centrum-venstre. Groen valgtest: 68% Socialdemokratiet, 66% SF, 63% Alternativet. Velinformeret om geopolitik og logistik. Bekymret for lukning af flykorridorer og oekonomiske konsekvenser. Foelger noeje med i Iran-konflikten og NATO-situationen. Forholdsvis rolig tone."},
+  {id:"JM",name:"Jacob Manz",color:"#BE185D",short:"JM",bio:"Klart venstre. Groen valgtest: 75% SF, 74% Alternativet, 74% Radikale. Klimapositive holdninger. Lille aktiv bidrag i politisk debat men valgtesten placerer ham klart paa den groenne venstrefloej."},
 ];
 
+const ALL=[...PARTIES,...DEBATERS];
 const THEMES=["Formueskat","Boligskat","Pension","Folkeskolen","Klima","Atomkraft","NATO","Vaaben","Sundhed"];
 const SUGG={
   Formueskat:["Boer vi indfoere en progressiv formueskat?","Er det rimeligt at beskatte arv?"],
   Boligskat:["Er boligskatten retfaerdig for familier?","Skal ejendomsvaerdiskatten haeves?"],
   Pension:["Skal pensionsalderen saenkes for nedslidte?","Er pensionssystemet baeredygtigt?"],
   Folkeskolen:["Hvad skal loese laerermanglen?","Er karakterer vigtige i folkeskolen?"],
-  Klima:["Skal vi have en CO2-skat pa koed?","Er 70%-maalet realistisk?"],
-  Atomkraft:["Skal Danmark abne for atomkraft?","Kan kernekraft erstatte vindenergi?"],
-  NATO:["Skal forsvarsbudgettet op pa 3% af BNP?","Er NATO-oprustning den rigtige vej?"],
+  Klima:["Skal vi have en CO2-skat paa koed?","Er 70%-maalet realistisk?"],
+  Atomkraft:["Skal Danmark aabne for atomkraft?","Kan kernekraft erstatte vindenergi?"],
+  NATO:["Skal forsvarsbudgettet op paa 3% af BNP?","Er NATO-oprustning den rigtige vej?"],
   Vaaben:["Skal Danmark levere mere til Ukraine?","Er der graenser for dansk vaabeneksport?"],
   Sundhed:["Hvordan loser vi ventelisterne?","Skal der vaere brugerbetaling i sundhedsvaesenet?"],
 };
 
 let S={view:"setup",theme:null,picked:[],msgs:[],loading:false};
 
-const av=(p,size=36)=>`<div class="av" style="width:${size}px;height:${size}px;background:${p.color};font-size:${Math.round(size*.28)}px">${p.short}</div>`;
+const av=(p,size=36)=>`<div class="av" style="width:${size}px;height:${size}px;background:${p.color};font-size:${Math.round(size*.28)}px;line-height:${size}px;text-align:center">${p.short}</div>`;
+
+function displayId(p){
+  if(p.id==="OE") return "Ø";
+  if(p.id==="ALT") return "Å";
+  if(p.id==="DD") return "Æ";
+  return p.id;
+}
 
 function renderSetup(){
   const sel=ALL.filter(p=>S.picked.includes(p.id));
   return `
-    <div style="text-align:center;padding:2rem 0 1.75rem">
+    <div style="text-align:center;padding:2rem 0 1.5rem">
       <h1>Fishbowl valgdebat 2026</h1>
-      <div class="sub">Vaelg tema og partiledere og debater de store valgtemaer</div>
+      <div class="sub">Vaelg tema, partiledere og debattoerer</div>
     </div>
+
     <div class="sec">Vaelg tema</div>
     <div class="themes">${THEMES.map(t=>`<button class="tpill${S.theme===t?' on':''}" onclick="setTheme('${t}')">${t}</button>`).join('')}</div>
-    <div class="sec">Vaelg 2-4 partiledere</div>
+
+    <div class="sec">Partiledere</div>
     <div class="pgrid">${PARTIES.map(p=>{
       const on=S.picked.includes(p.id),dis=!on&&S.picked.length>=4;
-      return `<div class="pcard${on?' on':''}${dis?' dis':''}" onclick="toggleParty('${p.id}')" style="${on?`border-color:${p.color}`:''}">
-        ${av(p,36)}
+      return `<div class="pcard${on?' on':''}${dis?' dis':''}" onclick="togglePicked('${p.id}')" style="${on?`border-color:${p.color};`:''}">
+        ${av(p,34)}
         <div>
-          <div style="font-weight:600;font-size:13px;color:${on?p.color:'#111'}">${p.id==="O2"?"Ø":p.id==="AA"?"Å":p.id==="AE"?"Æ":p.id}</div>
+          <div style="font-weight:600;font-size:13px;color:${on?p.color:'#111'}">${displayId(p)}</div>
           <div style="font-size:11px;color:#888">${p.leader.split(' ').slice(-1)[0]}</div>
         </div>
       </div>`;
     }).join('')}</div>
-    <button class="startbtn" onclick="startDebate()" ${(!S.theme||S.picked.length<2)?'disabled':''}>Start debatten</button>
-    <p class="hint">Vaelg et tema og mindst 2 partiledere for at starte</p>
+
+    <hr class="divider">
+    <div class="sec" style="margin-top:.25rem">Debattoerer fra Den Franske Cafe</div>
+    <div class="pgrid">${DEBATERS.map(p=>{
+      const on=S.picked.includes(p.id),dis=!on&&S.picked.length>=4;
+      return `<div class="pcard${on?' on':''}${dis?' dis':''}" onclick="togglePicked('${p.id}')" style="${on?`border-color:${p.color};`:''}">
+        ${av(p,34)}
+        <div>
+          <div style="font-weight:600;font-size:12px;color:${on?p.color:'#111'}">${p.name.split(' ')[0]}</div>
+          <div style="font-size:11px;color:#888">${p.name.split(' ').slice(-1)[0]}</div>
+        </div>
+      </div>`;
+    }).join('')}</div>
+
+    <button class="startbtn" onclick="startDebate()" ${(!S.theme||S.picked.length<2)?'disabled':''}>Start debatten &rarr;</button>
+    <p class="hint">Vaelg et tema og mindst 2 deltagere (maks. 4) for at starte</p>
+
     ${(S.theme||S.picked.length>0)?`
     <div class="valg">
-      <div class="sec">Dit valg</div>
+      <div class="sec" style="margin-top:0">Dit valg</div>
       <div class="valgrow">
         ${S.theme?`<span style="padding:5px 16px;border-radius:20px;background:#111;color:#fff;font-size:13px;font-weight:500">${S.theme}</span>`:'<span style="font-size:13px;color:#ccc">Intet tema valgt</span>'}
-        ${ALL.filter(p=>S.picked.includes(p.id)).map(p=>`<span class="valgpill" style="border:1.5px solid ${p.color};background:${p.color}18">
+        ${sel.map(p=>`<span class="valgpill" style="border:1.5px solid ${p.color};background:${p.color}18">
           ${av(p,22)}<span style="font-size:13px">${p.leader||p.name}</span>
         </span>`).join('')}
       </div>
@@ -151,14 +157,14 @@ function renderSetup(){
 }
 
 function renderDebate(){
-  const sel=PARTIES.filter(p=>S.picked.includes(p.id));
+  const sel=ALL.filter(p=>S.picked.includes(p.id));
   const suggs=S.msgs.length===0?(SUGG[S.theme]||[]):[];
   return `
     <div class="dbhdr">
-      <button class="backbtn" onclick="goBack()">Tilbage</button>
+      <button class="backbtn" onclick="goBack()">&larr; Tilbage</button>
       <span class="tbadge">${S.theme}</span>
     </div>
-    <div class="chips">${sel.map(p=>`<div class="chip">${av(p,22)}${p.leader||p.name}</div>`).join('')}</div>
+    <div class="chips">${sel.map(p=>`<div class="chip">${av(p,20)}${p.leader||p.name}</div>`).join('')}</div>
     ${suggs.length?`<div class="suggs">${suggs.map(q=>`<button class="sugg" onclick="setSugg(this)">${q}</button>`).join('')}</div>`:''}
     <div class="chat" id="chat">
       ${S.msgs.length===0?`<div class="empty">Stil dit forste sporgsmal om <strong>${S.theme}</strong></div>`:''}
@@ -186,9 +192,7 @@ function draw(){
 }
 
 function setTheme(t){S.theme=t;draw();}
-const ALL=[...PARTIES,...DEBATERS];
-
-function toggleParty(id){
+function togglePicked(id){
   if(S.picked.includes(id))S.picked=S.picked.filter(x=>x!==id);
   else if(S.picked.length<4)S.picked.push(id);
   draw();
@@ -205,33 +209,34 @@ async function send(){
   ci.value='';
   S.msgs.push({role:'user',content:txt});
   S.loading=true;draw();
-  const sel=PARTIES.filter(p=>S.picked.includes(p.id));
-  const system=`Du er vaert for en dansk politisk debat om "${S.theme}".
-Svar i karakteren som disse deltagere baseret pa deres holdninger:
+  const sel=ALL.filter(p=>S.picked.includes(p.id));
+  const system=`Du er vaert for en dansk politisk debat om "${S.theme}" ved Folketingsvalget 2026.
+Svar i karakteren som disse deltagere baseret paa deres holdninger:
 ${sel.map(p=>`- ${p.leader||p.name} (${p.name}): ${p.bio}`).join('\n')}
 
-Svar KUN med dette JSON uden markdown, brug personens fulde navn som key:
+Svar KUN med dette JSON uden markdown, brug personens fulde navn som name-felt:
 {"responses":[{"name":"PERSONENS FULDE NAVN","response":"svar her"}]}
 
-Regler: 3-4 saetninger per person, dansk, karakteristisk tone, jeg-form, engageret og nuanceret.`;
+Regler: 3-4 saetninger per person, paa dansk, karakteristisk tone, jeg-form, engageret og nuanceret. Svar KUN baseret paa de holdninger der er beskrevet ovenfor.`;
+
   const history=S.msgs.map(m=>m.role==='user'?{role:'user',content:m.content}:{role:'assistant',content:JSON.stringify({responses:m.responses})});
   try{
     const res=await fetch('/api/debate',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,system,messages:history})
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,system,messages:history})
     });
     const data=await res.json();
     if(data.error)throw new Error(data.error.message);
     const raw=(data.content||[]).map(b=>b.text||'').join('');
     const parsed=JSON.parse(raw.replace(/```json|```/g,'').trim());
     const responses=parsed.responses.map(r=>{
-      const p=ALL.find(x=>x.leader===r.name||x.name===r.name||x.leader?.split(' ').slice(-1)[0]===r.name||x.name.split(' ')[0]===r.name);
+      const p=ALL.find(x=>(x.leader&&x.leader===r.name)||(x.name===r.name)||(x.leader&&x.leader.split(' ').slice(-1)[0]===r.name)||(x.name.split(' ')[0]===r.name));
       return p?{id:p.id,response:r.response}:null;
     }).filter(Boolean);
     S.msgs.push({role:'assistant',responses});
   }catch(e){
-    S.msgs.push({role:'assistant',responses:[{id:sel[0].id,response:`Fejl: ${e.message}`}]});
+    S.msgs.push({role:'assistant',responses:[{id:sel[0].id,response:'Fejl: '+e.message}]});
   }
   S.loading=false;draw();
   const c=document.getElementById('chat');if(c)c.scrollTop=c.scrollHeight;
