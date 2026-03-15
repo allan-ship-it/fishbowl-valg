@@ -135,7 +135,7 @@ function renderSetup(){
       return `<div class="pcard${on?' on':''}${dis?' dis':''}" onclick="togglePicked('${p.id}')" style="${on?`border-color:${p.color};`:''}">
         ${av(p,34)}
         <div>
-          <div style="font-weight:600;font-size:12px;color:${on?p.color:'#111'}">${p.name.split(' ')[0]}</div>
+          <div style="font-weight:600;font-size:13px;color:${on?p.color:'#111'}">${p.short}</div>
           <div style="font-size:11px;color:#888">${p.name.split(' ').slice(-1)[0]}</div>
         </div>
       </div>`;
