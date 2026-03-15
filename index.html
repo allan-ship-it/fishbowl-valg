@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fishbowl Valgdebat 2026</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:#f9f9f7;color:#111;min-height:100vh}
+#app{max-width:680px;margin:0 auto;padding:1.5rem 1rem 3rem}
+h1{font-size:24px;font-weight:600}
+.sub{font-size:15px;color:#888;margin-top:4px}
+.sec{font-size:11px;font-weight:600;color:#888;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.themes{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.75rem}
+.tpill{padding:8px 18px;border-radius:20px;border:1.5px solid #ddd;background:#fff;font-size:14px;cursor:pointer;color:#888;transition:all .12s}
+.tpill.on{background:#111;color:#fff;border-color:#111;font-weight:500}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:1.75rem}
+.pcard{border:1.5px solid #e0e0e0;border-radius:10px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .12s;background:#fff}
+.pcard.on{border-width:2.5px;background:#fafafa}
+.pcard.dis{opacity:.4;cursor:not-allowed}
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;color:#fff;flex-shrink:0}
+.startbtn{width:100%;padding:14px;border-radius:10px;background:#111;color:#fff;border:none;font-size:16px;font-weight:500;cursor:pointer;transition:opacity .12s}
+.startbtn:disabled{opacity:.35;cursor:not-allowed}
+.hint{font-size:12px;color:#bbb;text-align:center;margin-top:8px}
+.valg{margin-top:1.25rem;padding:14px 16px;border-radius:10px;border:1px solid #e8e8e8;background:#fff}
+.valgrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.valgpill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px 4px 4px;border-radius:20px;font-size:13px}
+.dbhdr{display:flex;align-items:center;gap:10px;padding-bottom:14px;border-bottom:1px solid #eee;margin-bottom:14px}
+.backbtn{font-size:13px;color:#888;background:none;border:none;cursor:pointer;padding:0}
+.backbtn:hover{color:#111}
+.tbadge{padding:5px 16px;border-radius:20px;background:#f0f0f0;font-size:14px;font-weight:500}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 12px 4px 4px;border-radius:20px;border:1px solid #e8e8e8;font-size:13px;color:#666;background:#fff}
+.suggs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.sugg{padding:6px 14px;border-radius:14px;border:1px solid #e0e0e0;background:#fff;font-size:13px;color:#666;cursor:pointer;transition:all .12s}
+.sugg:hover{border-color:#aaa;color:#111}
+.chat{display:flex;flex-direction:column;gap:18px;min-height:280px;max-height:460px;overflow-y:auto;padding-bottom:8px}
+.empty{text-align:center;color:#ccc;font-size:15px;padding:4rem 0}
+.umsg{align-self:flex-end;background:#e8f0fe;padding:11px 16px;border-radius:18px 18px 4px 18px;max-width:70%;font-size:15px;line-height:1.6}
+.lgroup{display:flex;flex-direction:column;gap:14px}
+.lrow{display:flex;gap:12px}
+.lname{font-size:12px;font-weight:600;margin-bottom:5px}
+.lbubble{border-radius:18px 18px 18px 4px;padding:11px 16px;font-size:15px;line-height:1.6}
+.dots{display:flex;gap:5px;padding:8px 0 4px 46px}
+.dot{width:8px;height:8px;border-radius:50%;background:#ccc;animation:bop 1.3s infinite ease-in-out}
+@keyframes bop{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
+.inputrow{display:flex;gap:8px;padding-top:14px;border-top:1px solid #eee;margin-top:6px}
+textarea{flex:1;padding:11px 14px;border-radius:10px;border:1px solid #ddd;font-size:15px;resize:none;font-family:inherit;line-height:1.5;background:#fff}
+textarea:focus{outline:none;border-color:#999}
+.sbtn{padding:11px 20px;border-radius:10px;border:none;background:#111;color:#fff;font-size:15px;cursor:pointer;font-weight:500}
+.sbtn:disabled{opacity:.35;cursor:not-allowed}
+.errbox{font-size:13px;color:#c00;padding:10px 14px;background:#fff5f5;border-radius:8px;border:1px solid #fdd;margin-top:8px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const PARTIES=[
+  {id:"A",name:"Socialdemokratiet",leader:"Mette Frederiksen",color:"#C8001A",short:"MF",bio:"Statsminister. Stærk velfærd, aktiv stat, stram udlændingepolitik."},
+  {id:"V",name:"Venstre",leader:"Troels Lund Poulsen",color:"#003F8A",short:"TLP",bio:"Liberal økonomi, lavere skat, stærkt forsvar og NATO."},
+  {id:"M",name:"Moderaterne",leader:"Lars Løkke Rasmussen",color:"#7B2D8B",short:"LLR",bio:"Pragmatisk centrum, bred enighed, reformer og ansvarlig økonomi."},
+  {id:"F",name:"SF",leader:"Pia Olsen Dyhr",color:"#E04040",short:"POD",bio:"Stærk klimapolitik, grøn omstilling, bedre velfærd, retfærdig fordeling."},
+  {id:"Ø",name:"Enhedslisten",leader:"Pelle Dragsted",color:"#8B1A1A",short:"PD",bio:"Antikapitalistisk, klimaradikale, imod NATO-oprustning, maksimal omfordeling."},
+  {id:"C",name:"Konservative",leader:"Mona Juul",color:"#007A3D",short:"MJ",bio:"Borgerlige værdier, stærkt forsvar, lov og orden, lavere skat."},
+  {id:"B",name:"Radikale Venstre",leader:"Martin Lidegaard",color:"#9B1D82",short:"ML",bio:"Socialliberal, pro-EU, klimaambitiøs, humanistisk udlændingepolitik."},
+  {id:"I",name:"Liberal Alliance",leader:"Alex Vanopslagh",color:"#C49000",short:"AV",bio:"Markante skattelettelser, frihed, minimal statsindgriben."},
+  {id:"Å",name:"Alternativet",leader:"Franciska Rosenkilde",color:"#1E7B4B",short:"FR",bio:"Radikal grøn omstilling, bæredygtighed, systemforandring."},
+  {id:"Æ",name:"Danmarksdemokraterne",leader:"Inger Støjberg",color:"#1A3D6E",short:"IS",bio:"Stram udlændingepolitik, dansk kultur og identitet."},
+  {id:"O",name:"Dansk Folkeparti",leader:"Morten Messerschmidt",color:"#C07010",short:"MM",bio:"National konservativ, stram udlændingepolitik, EU-skeptisk."},
+  {id:"H",name:"Ny Højre",leader:"Lars Boje Mathiesen",color:"#2D2D6E",short:"LBM",bio:"Nationalkonservativ, imod masseindvandring, EU-kritisk, direkte demokrati."},
+];
+const THEMES=["Formueskat","Boligskat","Pension","Folkeskolen","Klima","Atomkraft","NATO","Våben","Sundhed"];
+const SUGG={
+  Formueskat:["Bør vi indføre en progressiv formueskat?","Er det rimeligt at beskatte arv?"],
+  Boligskat:["Er boligskatten retfærdig for familier?","Skal ejendomsværdiskatten hæves?"],
+  Pension:["Skal pensionsalderen sænkes for nedslidte?","Er pensionssystemet bæredygtigt?"],
+  Folkeskolen:["Hvad skal løse lærermanglen?","Er karakterer vigtige i folkeskolen?"],
+  Klima:["Skal vi have en CO2-skat på kød?","Er 70%-målet realistisk?"],
+  Atomkraft:["Skal Danmark åbne for atomkraft?","Kan kernekraft erstatte vindenergi?"],
+  NATO:["Skal forsvarsbudgettet op på 3% af BNP?","Er NATO-oprustning den rigtige vej?"],
+  Våben:["Skal Danmark levere mere til Ukraine?","Er der grænser for dansk våbeneksport?"],
+  Sundhed:["Hvordan løser vi ventelisterne?","Skal der være brugerbetaling i sundhedsvæsenet?"],
+};
+
+let S={view:"setup",theme:null,picked:[],msgs:[],loading:false};
+
+const av=(p,size=36)=>`<div class="av" style="width:${size}px;height:${size}px;background:${p.color};font-size:${Math.round(size*.28)}px">${p.short}</div>`;
+
+function renderSetup(){
+  const sel=PARTIES.filter(p=>S.picked.includes(p.id));
+  return `
+    <div style="text-align:center;padding:2rem 0 1.75rem">
+      <h1>Fishbowl valgdebat 2026</h1>
+      <div class="sub">Vælg tema og partiledere – debater de store valgtemaer</div>
+    </div>
+    <div class="sec">Vælg tema</div>
+    <div class="themes">${THEMES.map(t=>`<button class="tpill${S.theme===t?' on':''}" onclick="setTheme('${t}')">${t}</button>`).join('')}</div>
+    <div class="sec">Vælg 2–4 partiledere</div>
+    <div class="pgrid">${PARTIES.map(p=>{
+      const on=S.picked.includes(p.id),dis=!on&&S.picked.length>=4;
+      return `<div class="pcard${on?' on':''}${dis?' dis':''}" onclick="toggleParty('${p.id}')" style="${on?`border-color:${p.color}`:''}">
+        ${av(p,36)}
+        <div>
+          <div style="font-weight:600;font-size:13px;color:${on?p.color:'#111'}">${p.id}</div>
+          <div style="font-size:11px;color:#888">${p.leader.split(' ').slice(-1)[0]}</div>
+        </div>
+      </div>`;
+    }).join('')}</div>
+    <button class="startbtn" onclick="startDebate()" ${(!S.theme||S.picked.length<2)?'disabled':''}>Start debatten →</button>
+    <p class="hint">Vælg et tema og mindst 2 partiledere for at starte</p>
+    ${(S.theme||S.picked.length>0)?`
+    <div class="valg" style="margin-top:1.5rem">
+      <div class="sec">Dit valg</div>
+      <div class="valgrow">
+        ${S.theme?`<span style="padding:5px 16px;border-radius:20px;background:#111;color:#fff;font-size:13px;font-weight:500">${S.theme}</span>`:'<span style="font-size:13px;color:#ccc">Intet tema valgt</span>'}
+        ${sel.map(p=>`<span class="valgpill" style="border:1.5px solid ${p.color};background:${p.color}15">
+          ${av(p,22)}<span style="font-size:13px">${p.leader}</span>
+        </span>`).join('')}
+      </div>
+    </div>`:''}`;
+}
+
+function renderDebate(){
+  const sel=PARTIES.filter(p=>S.picked.includes(p.id));
+  const suggs=S.msgs.length===0?(SUGG[S.theme]||[]):[];
+  return `
+    <div class="dbhdr">
+      <button class="backbtn" onclick="goBack()">← Tilbage</button>
+      <span class="tbadge">${S.theme}</span>
+    </div>
+    <div class="chips">${sel.map(p=>`<div class="chip">${av(p,22)}${p.leader}</div>`).join('')}</div>
+    ${suggs.length?`<div class="suggs">${suggs.map(q=>`<button class="sugg" onclick="setSugg(this)">${q}</button>`).join('')}</div>`:''}
+    <div class="chat" id="chat">
+      ${S.msgs.length===0?`<div class="empty">Stil dit første spørgsmål om <strong>${S.theme}</strong></div>`:''}
+      ${S.msgs.map(m=>{
+        if(m.role==='user') return `<div class="umsg">${m.content}</div>`;
+        return `<div class="lgroup">${(m.responses||[]).map(r=>{
+          const p=PARTIES.find(x=>x.id===r.id);if(!p)return'';
+          return `<div class="lrow">${av(p,36)}<div>
+            <div class="lname" style="color:${p.color}">${p.leader}</div>
+            <div class="lbubble" style="background:${p.color}15">${r.response}</div>
+          </div></div>`;
+        }).join('')}</div>`;
+      }).join('')}
+      ${S.loading?`<div class="dots"><div class="dot"></div><div class="dot" style="animation-delay:.2s"></div><div class="dot" style="animation-delay:.4s"></div></div>`:''}
+    </div>
+    <div class="inputrow">
+      <textarea id="ci" rows="2" placeholder="Skriv et spørgsmål eller argument..." onkeydown="handleKey(event)" ${S.loading?'disabled':''}></textarea>
+      <button class="sbtn" onclick="send()" ${S.loading?'disabled':''}>Send</button>
+    </div>`;
+}
+
+function draw(){
+  document.getElementById('app').innerHTML=S.view==='setup'?renderSetup():renderDebate();
+  if(S.view==='debate'){const c=document.getElementById('chat');if(c)c.scrollTop=c.scrollHeight;}
+}
+
+function setTheme(t){S.theme=t;draw();}
+function toggleParty(id){
+  if(S.picked.includes(id)) S.picked=S.picked.filter(x=>x!==id);
+  else if(S.picked.length<4) S.picked.push(id);
+  draw();
+}
+function startDebate(){if(S.theme&&S.picked.length>=2){S.msgs=[];S.view='debate';draw();}}
+function goBack(){S.view='setup';draw();}
+function setSugg(el){const ci=document.getElementById('ci');if(ci)ci.value=el.textContent;}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}}
+
+async function send(){
+  const ci=document.getElementById('ci');
+  const txt=(ci?.value||'').trim();
+  if(!txt||S.loading)return;
+  ci.value='';
+  S.msgs.push({role:'user',content:txt});
+  S.loading=true;draw();
+  const sel=PARTIES.filter(p=>S.picked.includes(p.id));
+  const system=`Du er vært for en dansk valgdebat om "${S.theme}". Svar som disse partiledere:\n${sel.map(p=>`- ${p.leader} (${p.name}, liste ${p.id}): ${p.bio}`).join('\n')}\n\nSvar KUN med dette JSON uden markdown:\n{"responses":[{"id":"LISTEBOGSTAV","response":"svar her"}]}\n\nRegler: 3-4 sætninger per leder, dansk, karakteristisk tone, jeg-form.`;
+  const history=S.msgs.map(m=>m.role==='user'?{role:'user',content:m.content}:{role:'assistant',content:JSON.stringify({responses:m.responses})});
+  try{
+    const res=await fetch('/api/debate',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,system,messages:history})
+    });
+    const data=await res.json();
+    if(data.error)throw new Error(data.error.message);
+    const raw=(data.content||[]).map(b=>b.text||'').join('');
+    const parsed=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    S.msgs.push({role:'assistant',responses:parsed.responses});
+  }catch(e){
+    S.msgs.push({role:'assistant',responses:[{id:sel[0].id,response:`Fejl: ${e.message}`}]});
+  }
+  S.loading=false;draw();
+  const c=document.getElementById('chat');if(c)c.scrollTop=c.scrollHeight;
+}
+
+draw();
+</script>
+</body>
+</html>
