@@ -48,7 +48,6 @@ textarea{flex:1;padding:11px 14px;border-radius:10px;border:1px solid #ddd;font-
 textarea:focus{outline:none;border-color:#999}
 .sbtn{padding:11px 20px;border-radius:10px;border:none;background:#111;color:#fff;font-size:15px;cursor:pointer;font-weight:500}
 .sbtn:disabled{opacity:.35;cursor:not-allowed}
-.divider{border:none;border-top:1px solid #e8e8e8;margin:1rem 0}
 </style>
 </head>
 <body>
@@ -69,18 +68,6 @@ const PARTIES=[
   {id:"H",name:"Ny Højre",leader:"Lars Boje Mathiesen",color:"#2D2D6E",short:"LBM",bio:"Staerk modstander af formueskat. Vil have billig og stabil energi, positiv over for atomkraft. Stoetter NATO og vil leve op til styrkemalet. EU-kritisk - vil have beslutninger tilbage fra Bruxelles til nationalstaterne. Imod masseindvandring og hoje skatter. Stoetter Ukraines forsvarskamp."},
 ];
 
-const DEBATERS=[
-  {id:"AT",name:"Allan Thorvaldsen",color:"#2563EB",short:"AT",bio:"Centrum-venstre. Groen valgtest: mest enig med SF og Radikale. Skeptisk over for Alternativets chancer - advarer om stemmespild. Bekymret for NATO-eskalering og langstrakt krig - kalder lederne 'hoved-loese hons'. Tilhanger af klimaagendaen. Pragmatisk og humoristisk ordstyrer i debatten. Folger aktivt investeringer og geopolitik."},
-  {id:"CM",name:"Claus Møller",color:"#DC2626",short:"CM",bio:"Klart liberal/borgerlig. Stemte LA paa valgtest - naesten fuld plade. Groen valgtest: DD og DF. Klimaskeptisk - mener oekonomi og reformer skal prioriteres over klimapolitik. Kalder nationalt sproejteforbud for populisme. Imod formueskat. Stoetter Mileis markedsliberale reformer. Mener dansk model med let hyre/fyre er en styrke."},
-  {id:"MH",name:"Michael Hermansen",color:"#059669",short:"MH",bio:"Centrum-venstre. Overvejer Alternativet. Klart klimaengageret - kobler klima og oekonomi uloeselige. Argumenterer for at klimaforandringer har direkte oekonomisk betydning. Kritisk over for Mileis reformer. Positiv over for Loekkes tale. Interesseret i groen omstilling. Nuanceret og velinformeret."},
-  {id:"AA",name:"Alexander Aghassipour",color:"#7C3AED",short:"AA",bio:"Liberal/libertaer tendens. Groen valgtest: 70% Radikale. Imod formueskat - kalder det kortsigtet billig made at hoste stemmer. Skeptisk over for det danske ivaerksaettermiljo. AI-pessimist: frygter at 99,9% af wealth koncentreres i 5-10 globale virksomheder. Bekymret for tech-oligarkers magt."},
-  {id:"JB",name:"Jan Borgstrøm",color:"#0891B2",short:"JB",bio:"Klart centrum-venstre til venstre. Groen valgtest: 83% Radikale, 82% Socialdemokratiet, 82% SF. Kritisk over for Trump og USA's engagement i Israel-konflikten. Mener Trump forsoeger at bruge NATO til Israels krig. Geopolitisk bekymret og deler research-links aktivt."},
-  {id:"AS",name:"Arne Schultz",color:"#D97706",short:"AS",bio:"Centrum-venstre. Groen valgtest: 68% Socialdemokratiet, 66% SF, 63% Alternativet. Kritisk over for USA/Israel. Nervoees for NATO-inddragelse og Mellemoesteneskalering - sidder stille i bussen. Humoristisk tone og foretraekker face-to-face debat med et glas vin. Investerer i forsvarsindustri (SAAB, Africa Oil)."},
-  {id:"OS",name:"Ole Schultz",color:"#0D9488",short:"OS",bio:"Centrum-venstre. Groen valgtest: 68% Socialdemokratiet, 66% SF, 63% Alternativet. Velinformeret om geopolitik og logistik. Bekymret for lukning af flykorridorer og oekonomiske konsekvenser. Foelger noeje med i Iran-konflikten og NATO-situationen. Forholdsvis rolig tone."},
-  {id:"JM",name:"Jacob Manz",color:"#BE185D",short:"JM",bio:"Klart venstre. Groen valgtest: 75% SF, 74% Alternativet, 74% Radikale. Klimapositive holdninger. Lille aktiv bidrag i politisk debat men valgtesten placerer ham klart paa den groenne venstrefloej."},
-];
-
-const ALL=[...PARTIES,...DEBATERS];
 const THEMES=["Formueskat","Boligskat","Pension","Folkeskolen","Klima","Atomkraft","NATO","Vaaben","Sundhed"];
 const SUGG={
   Formueskat:["Boer vi indfoere en progressiv formueskat?","Er det rimeligt at beskatte arv?"],
@@ -95,28 +82,19 @@ const SUGG={
 };
 
 let S={view:"setup",theme:null,picked:[],msgs:[],loading:false};
-
 const av=(p,size=36)=>`<div class="av" style="width:${size}px;height:${size}px;background:${p.color};font-size:${Math.round(size*.28)}px;line-height:${size}px;text-align:center">${p.short}</div>`;
-
-function displayId(p){
-  if(p.id==="OE") return "Ø";
-  if(p.id==="ALT") return "Å";
-  if(p.id==="DD") return "Æ";
-  return p.id;
-}
+function displayId(p){if(p.id==="OE")return"Ø";if(p.id==="ALT")return"Å";if(p.id==="DD")return"Æ";return p.id;}
 
 function renderSetup(){
-  const sel=ALL.filter(p=>S.picked.includes(p.id));
+  const sel=PARTIES.filter(p=>S.picked.includes(p.id));
   return `
     <div style="text-align:center;padding:2rem 0 1.5rem">
       <h1>Fishbowl valgdebat 2026</h1>
-      <div class="sub">Vaelg tema, partiledere og debattoerer</div>
+      <div class="sub">Vaelg tema og partiledere – debater de store valgtemaer</div>
     </div>
-
     <div class="sec">Vaelg tema</div>
     <div class="themes">${THEMES.map(t=>`<button class="tpill${S.theme===t?' on':''}" onclick="setTheme('${t}')">${t}</button>`).join('')}</div>
-
-    <div class="sec">Partiledere</div>
+    <div class="sec">Vaelg 2–4 partiledere</div>
     <div class="pgrid">${PARTIES.map(p=>{
       const on=S.picked.includes(p.id),dis=!on&&S.picked.length>=4;
       return `<div class="pcard${on?' on':''}${dis?' dis':''}" onclick="togglePicked('${p.id}')" style="${on?`border-color:${p.color};`:''}">
@@ -127,53 +105,38 @@ function renderSetup(){
         </div>
       </div>`;
     }).join('')}</div>
-
-    <hr class="divider">
-    <div class="sec" style="margin-top:.25rem">Debattoerer fra Den Franske Cafe</div>
-    <div class="pgrid">${DEBATERS.map(p=>{
-      const on=S.picked.includes(p.id),dis=!on&&S.picked.length>=4;
-      return `<div class="pcard${on?' on':''}${dis?' dis':''}" onclick="togglePicked('${p.id}')" style="${on?`border-color:${p.color};`:''}">
-        ${av(p,34)}
-        <div>
-          <div style="font-weight:600;font-size:13px;color:${on?p.color:'#111'}">${p.short}</div>
-        
-        </div>
-      </div>`;
-    }).join('')}</div>
-
     <button class="startbtn" onclick="startDebate()" ${(!S.theme||S.picked.length<2)?'disabled':''}>Start debatten &rarr;</button>
-    <p class="hint">Vaelg et tema og mindst 2 deltagere (maks. 4) for at starte</p>
-
+    <p class="hint">Vaelg et tema og mindst 2 partiledere (maks. 4) for at starte</p>
     ${(S.theme||S.picked.length>0)?`
     <div class="valg">
       <div class="sec" style="margin-top:0">Dit valg</div>
       <div class="valgrow">
         ${S.theme?`<span style="padding:5px 16px;border-radius:20px;background:#111;color:#fff;font-size:13px;font-weight:500">${S.theme}</span>`:'<span style="font-size:13px;color:#ccc">Intet tema valgt</span>'}
         ${sel.map(p=>`<span class="valgpill" style="border:1.5px solid ${p.color};background:${p.color}18">
-          ${av(p,22)}<span style="font-size:13px">${p.leader||p.short}</span>
+          ${av(p,22)}<span style="font-size:13px">${p.leader}</span>
         </span>`).join('')}
       </div>
     </div>`:''}`;
 }
 
 function renderDebate(){
-  const sel=ALL.filter(p=>S.picked.includes(p.id));
+  const sel=PARTIES.filter(p=>S.picked.includes(p.id));
   const suggs=S.msgs.length===0?(SUGG[S.theme]||[]):[];
   return `
     <div class="dbhdr">
       <button class="backbtn" onclick="goBack()">&larr; Tilbage</button>
       <span class="tbadge">${S.theme}</span>
     </div>
-    <div class="chips">${sel.map(p=>`<div class="chip">${av(p,20)}${p.leader||p.short}</div>`).join('')}</div>
+    <div class="chips">${sel.map(p=>`<div class="chip">${av(p,20)}${p.leader}</div>`).join('')}</div>
     ${suggs.length?`<div class="suggs">${suggs.map(q=>`<button class="sugg" onclick="setSugg(this)">${q}</button>`).join('')}</div>`:''}
     <div class="chat" id="chat">
       ${S.msgs.length===0?`<div class="empty">Stil dit forste sporgsmal om <strong>${S.theme}</strong></div>`:''}
       ${S.msgs.map(m=>{
         if(m.role==='user') return `<div class="umsg">${m.content}</div>`;
         return `<div class="lgroup">${(m.responses||[]).map(r=>{
-          const p=ALL.find(x=>x.id===r.id);if(!p)return'';
+          const p=PARTIES.find(x=>x.id===r.id);if(!p)return'';
           return `<div class="lrow">${av(p,36)}<div>
-            <div class="lname" style="color:${p.color}">${p.leader||p.short}</div>
+            <div class="lname" style="color:${p.color}">${p.leader}</div>
             <div class="lbubble" style="background:${p.color}18">${r.response}</div>
           </div></div>`;
         }).join('')}</div>`;
@@ -190,7 +153,6 @@ function draw(){
   document.getElementById('app').innerHTML=S.view==='setup'?renderSetup():renderDebate();
   if(S.view==='debate'){const c=document.getElementById('chat');if(c)c.scrollTop=c.scrollHeight;}
 }
-
 function setTheme(t){S.theme=t;draw();}
 function togglePicked(id){
   if(S.picked.includes(id))S.picked=S.picked.filter(x=>x!==id);
@@ -209,15 +171,15 @@ async function send(){
   ci.value='';
   S.msgs.push({role:'user',content:txt});
   S.loading=true;draw();
-  const sel=ALL.filter(p=>S.picked.includes(p.id));
-  const system=`Du er vaert for en dansk politisk debat om "${S.theme}" ved Folketingsvalget 2026.
-Svar i karakteren som disse deltagere baseret paa deres holdninger:
-${sel.map(p=>`- ${p.leader||p.name} (${p.name}): ${p.bio}`).join('\n')}
+  const sel=PARTIES.filter(p=>S.picked.includes(p.id));
+  const system=`Du er vaert for en dansk valgdebat om "${S.theme}" ved Folketingsvalget 2026.
+Svar i karakteren som disse partiledere baseret paa deres FAKTISKE holdninger fra valgkampen 2026:
+${sel.map(p=>`- ${p.leader} (${p.name}): ${p.bio}`).join('\n')}
 
-Svar KUN med dette JSON uden markdown, brug personens fulde navn som name-felt:
-{"responses":[{"name":"PERSONENS FULDE NAVN","response":"svar her"}]}
+Svar KUN med dette JSON uden markdown, brug lederens fulde navn som name-felt:
+{"responses":[{"name":"LEDERENS FULDE NAVN","response":"svar her"}]}
 
-Regler: 3-4 saetninger per person, paa dansk, karakteristisk tone, jeg-form, engageret og nuanceret. Svar KUN baseret paa de holdninger der er beskrevet ovenfor.`;
+Regler: 3-4 saetninger per leder, paa dansk, karakteristisk tone, jeg-form, engageret og passioneret. Svar KUN baseret paa de holdninger der er beskrevet ovenfor.`;
 
   const history=S.msgs.map(m=>m.role==='user'?{role:'user',content:m.content}:{role:'assistant',content:JSON.stringify({responses:m.responses})});
   try{
@@ -231,7 +193,7 @@ Regler: 3-4 saetninger per person, paa dansk, karakteristisk tone, jeg-form, eng
     const raw=(data.content||[]).map(b=>b.text||'').join('');
     const parsed=JSON.parse(raw.replace(/```json|```/g,'').trim());
     const responses=parsed.responses.map(r=>{
-      const p=ALL.find(x=>(x.leader&&x.leader===r.name)||(x.name===r.name)||(x.leader&&x.leader.split(' ').slice(-1)[0]===r.name)||(x.name.split(' ')[0]===r.name));
+      const p=PARTIES.find(x=>x.leader===r.name||x.leader.split(' ').slice(-1)[0]===r.name);
       return p?{id:p.id,response:r.response}:null;
     }).filter(Boolean);
     S.msgs.push({role:'assistant',responses});
