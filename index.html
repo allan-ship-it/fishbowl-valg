@@ -80,6 +80,25 @@ const PARTIES=[
    bio:"Borgernes Parti-leder. Staerk modstander af formueskat. Vil have billig og stabil energi, positiv over for atomkraft. Stoetter NATO og vil leve op til styrkemalet. EU-kritisk - vil have beslutninger tilbage fra Bruxelles til nationalstaterne. Imod masseindvandring og hoje skatter. Vil have mere effektivt sundhedsvaesen med mindre bureaukrati. Stoetter Ukraines forsvarskamp."},
 ];
 
+const DEBATERS=[
+  {id:"AT",name:"Allan Thorvaldsen",color:"#2563EB",short:"AT",
+   bio:"Centrum-venstre. Graen valgtest: mest enig med SF og Radikale. Skeptisk over for Alternativets chancer - advarer om stemmespild. Bekymret for NATO-eskalering og langstrakt krig - kalder lederne 'hovedloese hons'. Tilhanger af klimaagendaen. Imod formueskat som symbolpolitik der skader investeringer. Pragmatisk og humoristisk ordstyrer."},
+  {id:"CM",name:"Claus Møller",color:"#DC2626",short:"CM",
+   bio:"Klart liberal/borgerlig. Stemte LA pa valgtest - naesten fuld plade. Groen valgtest: DD og DF. Klimaskeptisk - mener oekonomi og reformer skal prioriteres over klimapolitik. Kalder nationalt sproejteforbud for populisme. Imod formueskat. Stoetter Mileis markedsliberale reformer i Argentina. Mener dansk model med let hyre/fyre er en styrke."},
+  {id:"MH",name:"Michael Hermansen",color:"#059669",short:"MH",
+   bio:"Centrum-venstre. Overvejer Alternativet. Klart klimaengageret - kobler klima og oekonomi uloeselige. Argumenterer for at klimaforandringer har direkte oekonomisk betydning. Kritisk over for Mileis reformer - ser dem som udsalg af landets fremtid. Positiv over for Loekkes tale. Interesseret i groen omstilling. Nuanceret og velinformeret."},
+  {id:"AA",name:"Alexander Aghassipour",color:"#7C3AED",short:"AA",
+   bio:"Liberal/libertaer tendens. Groen valgtest: 70% Radikale. Imod formueskat - kalder det kortsigtet billig made at hoste stemmer. Skeptisk over for det danske ivaerksaettermiljo. AI-pessimist: frygter at 99,9% af wealth koncentreres i 5-10 globale virksomheder. Bekymret for tech-oligarkers magt. Mener AI pa sigt kan loese baeredygtighedsproblemer."},
+  {id:"JB",name:"Jan Borgstrøm",color:"#0891B2",short:"JB",
+   bio:"Klart centrum-venstre til venstre. Groen valgtest: 83% Radikale, 82% Socialdemokratiet, 82% SF. Kritisk over for Trump og USA's engagement i Israel-konflikten. Mener Trump forsoeger at bruge NATO til Israels krig. Geopolitisk bekymret og deler research-links aktivt. Brevstemmer da han er pa lederkursus valgdag."},
+  {id:"AS",name:"Arne Schultz",color:"#D97706",short:"AS",
+   bio:"Centrum-venstre. Groen valgtest: 68% Socialdemokratiet, 66% SF, 63% Alternativet. Kritisk over for USA/Israel. Nervoees for NATO-inddragelse og Mellemoesteneskalering - sidder stille i bussen. Humoristisk tone og foretraekker face-to-face debat med et glas vin. Investerer i forsvarsindustri (SAAB, Africa Oil). Har bestilt belgisk oel til valgaften."},
+  {id:"OS",name:"Ole Schultz",color:"#0D9488",short:"OS",
+   bio:"Centrum-venstre. Groen valgtest: 68% Socialdemokratiet, 66% SF, 63% Alternativet. Velinformeret om geopolitik og logistik - bekaemret for lukning af flykorridorer og oekonomiske konsekvenser. Foelger noeje med i Iran-konflikten og NATO-situationen. Forholdsvis rolig tone."},
+  {id:"JM",name:"Jacob Manz",color:"#BE185D",short:"JM",
+   bio:"Klart venstre. Groen valgtest: 75% SF, 74% Alternativet, 74% Radikale. Klimapositive holdninger baseret pa valgtestresultater. Brevstemmer da han er pa lederkursus valgdag. Lille aktiv bidrag i politisk debat men valgtesten placerer ham klart pa den groenne venstrefloej."},
+];
+
 const THEMES=["Formueskat","Boligskat","Pension","Folkeskolen","Klima","Atomkraft","NATO","Vaaben","Sundhed"];
 const SUGG={
   Formueskat:["Boer vi indfoere en progressiv formueskat?","Er det rimeligt at beskatte arv?"],
@@ -98,7 +117,7 @@ let S={view:"setup",theme:null,picked:[],msgs:[],loading:false};
 const av=(p,size=36)=>`<div class="av" style="width:${size}px;height:${size}px;background:${p.color};font-size:${Math.round(size*.28)}px">${p.short}</div>`;
 
 function renderSetup(){
-  const sel=PARTIES.filter(p=>S.picked.includes(p.id));
+  const sel=ALL.filter(p=>S.picked.includes(p.id));
   return `
     <div style="text-align:center;padding:2rem 0 1.75rem">
       <h1>Fishbowl valgdebat 2026</h1>
@@ -124,8 +143,8 @@ function renderSetup(){
       <div class="sec">Dit valg</div>
       <div class="valgrow">
         ${S.theme?`<span style="padding:5px 16px;border-radius:20px;background:#111;color:#fff;font-size:13px;font-weight:500">${S.theme}</span>`:'<span style="font-size:13px;color:#ccc">Intet tema valgt</span>'}
-        ${sel.map(p=>`<span class="valgpill" style="border:1.5px solid ${p.color};background:${p.color}18">
-          ${av(p,22)}<span style="font-size:13px">${p.leader}</span>
+        ${ALL.filter(p=>S.picked.includes(p.id)).map(p=>`<span class="valgpill" style="border:1.5px solid ${p.color};background:${p.color}18">
+          ${av(p,22)}<span style="font-size:13px">${p.leader||p.name}</span>
         </span>`).join('')}
       </div>
     </div>`:''}`;
@@ -139,16 +158,16 @@ function renderDebate(){
       <button class="backbtn" onclick="goBack()">Tilbage</button>
       <span class="tbadge">${S.theme}</span>
     </div>
-    <div class="chips">${sel.map(p=>`<div class="chip">${av(p,22)}${p.leader}</div>`).join('')}</div>
+    <div class="chips">${sel.map(p=>`<div class="chip">${av(p,22)}${p.leader||p.name}</div>`).join('')}</div>
     ${suggs.length?`<div class="suggs">${suggs.map(q=>`<button class="sugg" onclick="setSugg(this)">${q}</button>`).join('')}</div>`:''}
     <div class="chat" id="chat">
       ${S.msgs.length===0?`<div class="empty">Stil dit forste sporgsmal om <strong>${S.theme}</strong></div>`:''}
       ${S.msgs.map(m=>{
         if(m.role==='user') return `<div class="umsg">${m.content}</div>`;
         return `<div class="lgroup">${(m.responses||[]).map(r=>{
-          const p=PARTIES.find(x=>x.id===r.id);if(!p)return'';
+          const p=ALL.find(x=>x.id===r.id);if(!p)return'';
           return `<div class="lrow">${av(p,36)}<div>
-            <div class="lname" style="color:${p.color}">${p.leader}</div>
+            <div class="lname" style="color:${p.color}">${p.leader||p.name}</div>
             <div class="lbubble" style="background:${p.color}18">${r.response}</div>
           </div></div>`;
         }).join('')}</div>`;
@@ -167,6 +186,8 @@ function draw(){
 }
 
 function setTheme(t){S.theme=t;draw();}
+const ALL=[...PARTIES,...DEBATERS];
+
 function toggleParty(id){
   if(S.picked.includes(id))S.picked=S.picked.filter(x=>x!==id);
   else if(S.picked.length<4)S.picked.push(id);
@@ -185,14 +206,14 @@ async function send(){
   S.msgs.push({role:'user',content:txt});
   S.loading=true;draw();
   const sel=PARTIES.filter(p=>S.picked.includes(p.id));
-  const system=`Du er vaert for en dansk valgdebat om "${S.theme}" ved Folketingsvalget 2026.
-Svar i karakteren som disse partiledere baseret pa deres FAKTISKE holdninger:
-${sel.map(p=>`- ${p.leader} (${p.name}): ${p.bio}`).join('\n')}
+  const system=`Du er vaert for en dansk politisk debat om "${S.theme}".
+Svar i karakteren som disse deltagere baseret pa deres holdninger:
+${sel.map(p=>`- ${p.leader||p.name} (${p.name}): ${p.bio}`).join('\n')}
 
-Svar KUN med dette JSON uden markdown, brug lederens fulde navn som key:
-{"responses":[{"name":"LEDERENS FULDE NAVN","response":"svar her"}]}
+Svar KUN med dette JSON uden markdown, brug personens fulde navn som key:
+{"responses":[{"name":"PERSONENS FULDE NAVN","response":"svar her"}]}
 
-Regler: 3-4 saetninger per leder, dansk, karakteristisk tone, jeg-form.`;
+Regler: 3-4 saetninger per person, dansk, karakteristisk tone, jeg-form, engageret og nuanceret.`;
   const history=S.msgs.map(m=>m.role==='user'?{role:'user',content:m.content}:{role:'assistant',content:JSON.stringify({responses:m.responses})});
   try{
     const res=await fetch('/api/debate',{
@@ -205,7 +226,7 @@ Regler: 3-4 saetninger per leder, dansk, karakteristisk tone, jeg-form.`;
     const raw=(data.content||[]).map(b=>b.text||'').join('');
     const parsed=JSON.parse(raw.replace(/```json|```/g,'').trim());
     const responses=parsed.responses.map(r=>{
-      const p=PARTIES.find(x=>x.leader===r.name||x.leader.split(' ').slice(-1)[0]===r.name);
+      const p=ALL.find(x=>x.leader===r.name||x.name===r.name||x.leader?.split(' ').slice(-1)[0]===r.name||x.name.split(' ')[0]===r.name);
       return p?{id:p.id,response:r.response}:null;
     }).filter(Boolean);
     S.msgs.push({role:'assistant',responses});
