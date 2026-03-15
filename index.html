@@ -186,15 +186,13 @@ async function send(){
   S.loading=true;draw();
   const sel=PARTIES.filter(p=>S.picked.includes(p.id));
   const system=`Du er vaert for en dansk valgdebat om "${S.theme}" ved Folketingsvalget 2026.
-Svar KUN i karakteren som disse partiledere baseret pa deres FAKTISKE holdninger fra valgkampen 2026:
-${sel.map(p=>`- ${p.leader} (${p.name}, ID: ${p.id}): ${p.bio}`).join('\n')}
+Svar i karakteren som disse partiledere baseret pa deres FAKTISKE holdninger:
+${sel.map(p=>`- ${p.leader} (${p.name}): ${p.bio}`).join('\n')}
 
-VIGTIGT: Svar udelukkende ud fra de holdninger der er beskrevet ovenfor. Brug PRAECIST det ID der er angivet i parentes ovenfor - ikke partibogstavet.
+Svar KUN med dette JSON uden markdown, brug lederens fulde navn som key:
+{"responses":[{"name":"LEDERENS FULDE NAVN","response":"svar her"}]}
 
-Svar KUN med dette JSON uden markdown:
-{"responses":[{"id":"PARTI_ID","response":"svar her"}]}
-
-Regler: 3-4 saetninger per leder, dansk, karakteristisk tone, jeg-form, passioneret men parlamentarisk hoeflig.`;
+Regler: 3-4 saetninger per leder, dansk, karakteristisk tone, jeg-form.`;
   const history=S.msgs.map(m=>m.role==='user'?{role:'user',content:m.content}:{role:'assistant',content:JSON.stringify({responses:m.responses})});
   try{
     const res=await fetch('/api/debate',{
@@ -206,7 +204,11 @@ Regler: 3-4 saetninger per leder, dansk, karakteristisk tone, jeg-form, passione
     if(data.error)throw new Error(data.error.message);
     const raw=(data.content||[]).map(b=>b.text||'').join('');
     const parsed=JSON.parse(raw.replace(/```json|```/g,'').trim());
-    S.msgs.push({role:'assistant',responses:parsed.responses});
+    const responses=parsed.responses.map(r=>{
+      const p=PARTIES.find(x=>x.leader===r.name||x.leader.split(' ').slice(-1)[0]===r.name);
+      return p?{id:p.id,response:r.response}:null;
+    }).filter(Boolean);
+    S.msgs.push({role:'assistant',responses});
   }catch(e){
     S.msgs.push({role:'assistant',responses:[{id:sel[0].id,response:`Fejl: ${e.message}`}]});
   }
