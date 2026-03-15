@@ -136,7 +136,7 @@ function renderSetup(){
         ${av(p,34)}
         <div>
           <div style="font-weight:600;font-size:13px;color:${on?p.color:'#111'}">${p.short}</div>
-          <div style="font-size:11px;color:#888">${p.name.split(' ').slice(-1)[0]}</div>
+        
         </div>
       </div>`;
     }).join('')}</div>
@@ -150,7 +150,7 @@ function renderSetup(){
       <div class="valgrow">
         ${S.theme?`<span style="padding:5px 16px;border-radius:20px;background:#111;color:#fff;font-size:13px;font-weight:500">${S.theme}</span>`:'<span style="font-size:13px;color:#ccc">Intet tema valgt</span>'}
         ${sel.map(p=>`<span class="valgpill" style="border:1.5px solid ${p.color};background:${p.color}18">
-          ${av(p,22)}<span style="font-size:13px">${p.leader||p.name}</span>
+          ${av(p,22)}<span style="font-size:13px">${p.leader||p.short}</span>
         </span>`).join('')}
       </div>
     </div>`:''}`;
@@ -164,7 +164,7 @@ function renderDebate(){
       <button class="backbtn" onclick="goBack()">&larr; Tilbage</button>
       <span class="tbadge">${S.theme}</span>
     </div>
-    <div class="chips">${sel.map(p=>`<div class="chip">${av(p,20)}${p.leader||p.name}</div>`).join('')}</div>
+    <div class="chips">${sel.map(p=>`<div class="chip">${av(p,20)}${p.leader||p.short}</div>`).join('')}</div>
     ${suggs.length?`<div class="suggs">${suggs.map(q=>`<button class="sugg" onclick="setSugg(this)">${q}</button>`).join('')}</div>`:''}
     <div class="chat" id="chat">
       ${S.msgs.length===0?`<div class="empty">Stil dit forste sporgsmal om <strong>${S.theme}</strong></div>`:''}
@@ -173,7 +173,7 @@ function renderDebate(){
         return `<div class="lgroup">${(m.responses||[]).map(r=>{
           const p=ALL.find(x=>x.id===r.id);if(!p)return'';
           return `<div class="lrow">${av(p,36)}<div>
-            <div class="lname" style="color:${p.color}">${p.leader||p.name}</div>
+            <div class="lname" style="color:${p.color}">${p.leader||p.short}</div>
             <div class="lbubble" style="background:${p.color}18">${r.response}</div>
           </div></div>`;
         }).join('')}</div>`;
